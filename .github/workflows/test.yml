@@ -1,0 +1,39 @@
+name: Python Tests
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Установите зависимости, если есть requirements.txt
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # Установите тестовые зависимости
+        pip install pytest pytest-cov
+
+    - name: Run tests with pytest
+      run: |
+        # Если у вас есть папка tests/
+        if [ -d "tests" ]; then
+          python -m pytest tests/ -v
+        else
+          echo "No tests directory found"
+        fi
