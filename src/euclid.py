@@ -5,6 +5,7 @@ def evkl(a, b):
         nod, x, y = evkl(b % a, a)
         return nod, y - (b // a) * x, x
 
+
 a = int(input())
 b = int(input())
 nod, x, y = evkl(a, b)
